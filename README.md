@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
+  <h1>Convert.io 🔄</h1>
+  <p>A modern, minimal, universal unit and currency converter.</p>
+</div>
+
+---
+
+## Overview
+
+Convert.io is a fast, offline-capable (planned) web application that allows you to instantly convert between a wide range of units and currencies. Built with modern web technologies, it features a sleek, Google Material Design 3 inspired interface for a seamless user experience across devices.
+
+## Features
+
+- **Universal Conversion:** Instantly convert Length, Weight, Temperature, Area, Volume, and Currency.
+- **Bidirectional Input:** Type in either the "From" or "To" field—conversions happen instantly in both directions.
+- **Modern UI/UX:** A clean, uncluttered interface heavily inspired by Android's Material You, featuring large rounded corners, soft shadows, and smooth transitions.
+- **Dark Mode Support:** Fully supports system dark and light themes.
+- **Developer Friendly:** Comprehensive AI agent guidelines (`AGENTS.md`), full test suite (Vitest), and strict TypeScript configurations.
+
+## Tech Stack
+
+- **Framework:** Next.js (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS v3
+- **UI Components:** NextUI
+- **Icons:** Lucide React
+- **Testing:** Vitest & Testing Library
 
 ## Getting Started
 
-First, run the development server:
+First, ensure you have Node.js (v20+) installed. Then, clone the repository and install dependencies:
 
 ```bash
+# Install dependencies
+npm install
+
+# Start the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Development
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The project includes a full suite of commands for development and testing:
 
-## Learn More
+- `npm run dev`: Start the local development server.
+- `npm run test:ci`: Run the Vitest test suite.
+- `npm run lint`: Run ESLint to check for code quality issues.
+- `npm run typecheck`: Run TypeScript compilation check.
+- `npm run build`: Create an optimized production build.
 
-To learn more about Next.js, take a look at the following resources:
+## License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under a **Personal Use Only** license. You are free to use, modify, and distribute this software for personal, non-commercial purposes. See the [LICENSE](LICENSE) file for more details.
