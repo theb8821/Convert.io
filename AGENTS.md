@@ -330,11 +330,55 @@ Configure the following on GitHub → Settings → Branches → `main`:
 
 ## Git Workflow (Agent Responsibilities)
 
-After every **successful** run (i.e., lint, typecheck, tests, and/or build all pass), agents **must** stage and commit the changed files with an appropriate conventional commit message. **Agents must never push** — pushing is the user's responsibility.
+### The Two-Phase Model
 
-### Commit Message Schema
+Git work is split into two distinct phases:
 
-All commit messages **must** follow [Conventional Commits](https://www.conventionalcommits.org/) format:
+| Phase | Who Does It | When |
+|-------|-------------|------|
+| **Stage** | Agent (automatically after every verified task) | After lint + typecheck + tests + build all pass |
+| **Commit** | Agent (only when explicitly asked) | When user invokes the `git-commit` skill |
+| **Push** | User only | Whenever the user is ready |
+
+**Agents must never commit autonomously and must never push.**
+
+---
+
+### Phase 1 — Auto-Stage (After Every Successful Task)
+
+After every successful verification run, the agent must:
+
+1. Run `npm run lint && npm run typecheck && npm run test:ci && npm run build` and confirm all pass.
+2. Stage the relevant changed files with targeted `git add`:
+   ```bash
+   git add <file1> <file2> ...
+   ```
+3. Report to the user that the work is staged and ready to commit.
+4. **Stop. Do not commit.**
+
+> Staging keeps work checkpointed without polluting the git history with
+> partial or in-progress commits. The user reviews and decides when to commit.
+
+---
+
+### Phase 2 — Commit on Demand (via `git-commit` Skill)
+
+Commits are only made when the user explicitly asks (e.g. *"commit my work"*,
+*"save this as a commit"*, *"let's checkpoint this"*).
+
+When invoked, the agent reads the **`git-commit` skill** at
+`.agents/skills/git-commit/SKILL.md` and follows its instructions to:
+
+1. Inspect all staged and unstaged changes.
+2. Group them into logical units.
+3. Stage each group and commit with a proper **Conventional Commit** message.
+4. Report the commits and confirm the working tree is clean.
+
+---
+
+### Conventional Commit Message Schema
+
+All commit messages **must** follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
 <type>: <short description>
@@ -353,39 +397,20 @@ All commit messages **must** follow [Conventional Commits](https://www.conventio
 | `perf`     | Performance improvement                                        | `perf: memoize unit list derivation`              |
 | `build`    | Build system or dependency changes                             | `build: downgrade tailwind to v3 for NextUI`      |
 
-### Rules
-
-1. **Always verify before committing.** Run the appropriate checks (`npm run lint`, `npm run typecheck`, `npm run test:ci`, `npm run build`) and confirm they pass before staging.
-2. **Stage only relevant files.** Use `git add <file1> <file2> ...` for targeted staging. Avoid `git add .` unless every changed file is part of the same logical change.
-3. **One logical change per commit.** If a task involves multiple distinct changes (e.g., adding tests AND updating CI), make separate commits:
-   ```bash
-   git add __tests__/ vitest.config.ts __tests__/setup.ts
-   git commit -m "test: add conversion engine and unit definition tests"
-
-   git add .github/
-   git commit -m "ci: add lint, typecheck, test, and build pipeline"
-   ```
-4. **Never push.** The user handles `git push` manually.
-5. **Keep messages concise.** The description should be lowercase, imperative mood, no period at the end, and under 72 characters.
-6. **Use scope (optional) for precision** when helpful:
-   ```
-   feat(units): add speed category
-   fix(temperature): correct Kelvin to Fahrenheit formula
-   test(conversions): add reversibility assertions
-   ```
-
-### Post-Task Checklist
-
-After completing any task, the agent should:
-
-```
-1. ✅ Verify: npm run lint && npm run typecheck && npm run test:ci && npm run build
-2. ✅ Stage:  git add <relevant files>
-3. ✅ Commit: git commit -m "<type>: <description>"
-4. ⏸️ Stop:   Do NOT push — user will push when ready
-```
+Optional scope: `feat(units): add speed category`
 
 ---
+
+### Post-Task Checklist (Agent)
+
+```
+1. ✅ Verify:  npm run lint && npm run typecheck && npm run test:ci && npm run build
+2. ✅ Stage:   git add <relevant files>
+3. 🛑 Stop:   Do NOT commit — wait for user to invoke the git-commit skill
+4. 🛑 Never:  git push
+```
+
+
 
 ## Code Conventions
 
