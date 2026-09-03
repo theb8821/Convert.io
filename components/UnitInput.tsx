@@ -1,6 +1,6 @@
 "use client";
 
-import {Input, Select, SelectItem} from "@nextui-org/react";
+import {Input, Autocomplete, AutocompleteItem} from "@nextui-org/react";
 import {UnitDefinition} from "@/lib/units/types";
 import {ChangeEvent} from "react";
 
@@ -47,37 +47,32 @@ export function UnitInput({
           }}
           placeholder="0"
         />
-        <Select
+        <Autocomplete
           items={units}
-          selectedKeys={[selectedUnit]}
-          onChange={(e) => {
-            if(e.target.value) onUnitChange(e.target.value)
+          selectedKey={selectedUnit}
+          onSelectionChange={(key) => {
+            if(key) onUnitChange(key as string);
           }}
           aria-label="Select unit"
           variant="flat"
-          className="w-full sm:w-48"
-          classNames={{
-            trigger: "bg-content3/50 hover:bg-content3 shadow-sm h-14 rounded-2xl",
-            value: "text-md font-medium"
-          }}
-          renderValue={(items) => {
-            return items.map((item) => (
-              <div key={item.key} className="flex gap-2 items-center">
-                <span>{item.data?.name}</span>
-                <span className="text-default-400 text-xs">({item.data?.symbol})</span>
-              </div>
-            ));
+          className="w-full sm:w-64"
+          isClearable={false}
+          inputProps={{
+            classNames: {
+              inputWrapper: "bg-content3/50 hover:bg-content3 shadow-sm h-14 rounded-2xl",
+              input: "text-md font-medium"
+            }
           }}
         >
           {(unit) => (
-            <SelectItem key={unit.id} textValue={unit.name}>
+            <AutocompleteItem key={unit.id} textValue={unit.name}>
               <div className="flex justify-between items-center w-full">
                 <span>{unit.name}</span>
                 <span className="text-default-400 text-xs">{unit.symbol}</span>
               </div>
-            </SelectItem>
+            </AutocompleteItem>
           )}
-        </Select>
+        </Autocomplete>
       </div>
     </div>
   );
