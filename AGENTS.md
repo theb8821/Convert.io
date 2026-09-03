@@ -48,6 +48,7 @@ convert.io/
 ├── .github/
 │   └── workflows/
 │       ├── ci.yml                 # CI pipeline: lint → typecheck → test → build
+│       ├── deploy.yml             # GitHub Pages deployment: verify → export → deploy
 │       └── deploy-preview.yml     # PR preview build + artifact upload
 ├── __tests__/
 │   ├── setup.ts                   # Vitest setup (jest-dom matchers)
@@ -281,6 +282,21 @@ Triggers on **pull requests to `main`**.
 - Runs `npm run build`.
 - Uploads `.next/` as a GitHub artifact (7-day retention).
 - Can be extended with Vercel/Netlify preview deployment steps.
+
+#### `.github/workflows/deploy.yml` — GitHub Pages Deployment
+Triggers on **push to `main`** and **manual workflow dispatch**.
+- Runs verification (`npm run lint`, `npm run typecheck`, `npm run test:ci`).
+- Builds static export (`npm run build` generates `./out`).
+- Uploads `./out` via `actions/upload-pages-artifact@v3`.
+- Deploys live to GitHub Pages via `actions/deploy-pages@v4`.
+- **Requirement**: In GitHub repo settings, set **Settings** → **Pages** → **Source** to **GitHub Actions**.
+
+### Static Export & BasePath (`next.config.ts`)
+- Configured with `output: 'export'` for full static HTML/CSS/JS generation into `out/`.
+- `basePath` is dynamically set:
+  - In production (`process.env.NODE_ENV === 'production'`): `/convert.io` (matches GitHub repository subpath).
+  - In development: `""` (runs directly at root `http://localhost:3000`).
+- `images: { unoptimized: true }` and `trailingSlash: true` ensure clean routing and asset delivery on static hosts.
 
 ### Branch Protection (Recommended)
 Configure the following on GitHub → Settings → Branches → `main`:

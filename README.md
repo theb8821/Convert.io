@@ -48,7 +48,15 @@ The project includes a full suite of commands for development and testing:
 - `npm run test:ci`: Run the Vitest test suite.
 - `npm run lint`: Run ESLint to check for code quality issues.
 - `npm run typecheck`: Run TypeScript compilation check.
-- `npm run build`: Create an optimized production build.
+- `npm run build`: Create an optimized static export in the `out/` directory.
+
+## Deployment
+
+The project is configured for automated deployment to **GitHub Pages** via GitHub Actions on every push to `main`:
+
+1. In your GitHub repository, go to **Settings** → **Pages**.
+2. Under **Build and deployment** → **Source**, select **GitHub Actions**.
+3. Pushing to the `main` branch will automatically run tests, build the static export, and deploy to GitHub Pages.
 
 ## License
 
