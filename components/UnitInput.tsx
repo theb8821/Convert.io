@@ -1,8 +1,9 @@
 "use client";
 
-import {Input, Autocomplete, AutocompleteItem} from "@nextui-org/react";
+import {Input} from "@nextui-org/react";
 import {UnitDefinition} from "@/lib/units/types";
 import {ChangeEvent} from "react";
+import {UnitSelector} from "./UnitSelector";
 
 interface UnitInputProps {
   label: string;
@@ -23,7 +24,7 @@ export function UnitInput({
 }: UnitInputProps) {
   
   const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
-    // Only allow numbers and decimals
+    // Only allow numbers, decimals, and leading minus
     const val = e.target.value;
     if (val === '' || /^-?\d*\.?\d*$/.test(val)) {
       onValueChange(val);
@@ -46,33 +47,13 @@ export function UnitInput({
             input: "text-4xl font-semibold bg-transparent data-[has-start-content=true]:ps-0",
           }}
           placeholder="0"
+          aria-label={label}
         />
-        <Autocomplete
-          items={units}
-          selectedKey={selectedUnit}
-          onSelectionChange={(key) => {
-            if(key) onUnitChange(key as string);
-          }}
-          aria-label="Select unit"
-          variant="flat"
-          className="w-full sm:w-64"
-          isClearable={false}
-          inputProps={{
-            classNames: {
-              inputWrapper: "bg-content3/50 hover:bg-content3 shadow-sm h-14 rounded-2xl",
-              input: "text-md font-medium"
-            }
-          }}
-        >
-          {(unit) => (
-            <AutocompleteItem key={unit.id} textValue={unit.name}>
-              <div className="flex justify-between items-center w-full">
-                <span>{unit.name}</span>
-                <span className="text-default-400 text-xs">{unit.symbol}</span>
-              </div>
-            </AutocompleteItem>
-          )}
-        </Autocomplete>
+        <UnitSelector
+          selectedUnit={selectedUnit}
+          onUnitChange={onUnitChange}
+          units={units}
+        />
       </div>
     </div>
   );
